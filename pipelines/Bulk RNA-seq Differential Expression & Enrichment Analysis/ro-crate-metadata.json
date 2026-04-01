@@ -196,5 +196,6 @@
       "encodingFormat": "image/png",
       "name": "Volcano & enrichment plots"
     }
-  ]
+  ],
+  "version": "1.0.0"
 }
