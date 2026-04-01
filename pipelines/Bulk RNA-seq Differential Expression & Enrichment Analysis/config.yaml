@@ -1,0 +1,37 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Bulk RNA-seq DE & Enrichment Analysis — config.yaml (Test Run)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Project ───────────────────────────────────────────────────────────────────
+project_name: "test_run"
+
+# ── Input files ───────────────────────────────────────────────────────────────
+# Paths as seen inside the container (mounted at /input)
+tx2gene_path: "/input/star_salmon/tx2gene.tsv"
+metadata_path: "/input/example_salmon_metadata.csv"
+
+# ── Experimental design ───────────────────────────────────────────────────────
+group_col: "Condition"
+
+# Comparison: Mus_sham (treatment) vs Mus_UUOday2 (control)
+comb_set:
+  - ["Mus_sham", "Mus_UUOday2"]
+
+# ── DEG filtering thresholds ──────────────────────────────────────────────────
+method: "padj"
+fc_threshold: 1
+pval_threshold: 0.05
+
+# ── Enrichment analysis settings ─────────────────────────────────────────────
+sample_organism: "mouse"
+keytype: "SYMBOL"
+norm_method: "edgeR"
+
+# Highlight these genes on the volcano plot
+specific_genes: "KRAS,ERBB2"
+
+# Mouse Hallmark gene sets
+hallmark_geneset_gmt: "/input/Test_input_data/References/mh.all.v2025.1.Mm.symbols.gmt"
+
+# ── Compute ───────────────────────────────────────────────────────────────────
+threads: 4

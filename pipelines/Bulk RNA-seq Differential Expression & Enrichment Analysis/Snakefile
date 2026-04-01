@@ -1,0 +1,71 @@
+configfile: "config.yaml"
+
+# Derive comparison names from comb_set
+COMPARISONS = [
+    f"{pair[0]}_vs_{pair[1]}"
+    for pair in config["comb_set"]
+]
+
+PROJECT = config["project_name"]
+
+# Build the COMB_SET env var string: "A,B;C,D"
+COMB_SET_STR = ";".join(
+    ",".join(pair) for pair in config["comb_set"]
+)
+
+# ── Final targets ──────────────────────────────────────────────────────────────
+rule all:
+    input:
+        expand("/output/{project}/0.DGE/DEG_edgeR_{comparison}.xlsx",
+               project=PROJECT, comparison=COMPARISONS),
+        f"/output/{PROJECT}/TPM_gene.csv",
+        f"/output/{PROJECT}/TMM_length_normalized_count.csv",
+
+# ── Step 1 : DE + Enrichment Analysis ─────────────────────────────────────────
+rule de_analysis:
+    """
+    Run the full Bulk RNA-seq DE and enrichment pipeline using edgeR.
+    Outputs DEG tables (xlsx), volcano plots, GO/GSEA/Reactome results.
+    """
+    output:
+        deg = expand("/output/{project}/0.DGE/DEG_edgeR_{comparison}.xlsx",
+                     project=PROJECT, comparison=COMPARISONS),
+        tpm = f"/output/{PROJECT}/TPM_gene.csv",
+        tmm = f"/output/{PROJECT}/TMM_length_normalized_count.csv",
+    params:
+        project_name    = config["project_name"],
+        group_col       = config["group_col"],
+        tx2gene_path    = config["tx2gene_path"],
+        metadata_path   = config["metadata_path"],
+        comb_set_str    = COMB_SET_STR,
+        method          = config.get("method", "padj"),
+        fc              = config.get("fc_threshold", 1),
+        pval            = config.get("pval_threshold", 0.05),
+        organism        = config.get("sample_organism", "mouse"),
+        keytype         = config.get("keytype", "SYMBOL"),
+        norm_method     = config.get("norm_method", "edgeR"),
+        specific_genes  = config.get("specific_genes", ""),
+        hallmark_gmt    = config.get("hallmark_geneset_gmt", ""),
+    log:
+        "/output/logs/de_analysis.log"
+    threads: config.get("threads", 4)
+    shell:
+        """
+        mkdir -p /output/logs
+        export SCRIPT_DIR=/pipeline/R_scripts
+        export ROOT_PATH=/output/
+        export PROJECT_NAME="{params.project_name}"
+        export GROUP_COL="{params.group_col}"
+        export TX2GENE_PATH="{params.tx2gene_path}"
+        export METADATA_PATH="{params.metadata_path}"
+        export COMB_SET="{params.comb_set_str}"
+        export METHOD="{params.method}"
+        export FC="{params.fc}"
+        export PVAL="{params.pval}"
+        export ORGANISM="{params.organism}"
+        export KEYTYPE="{params.keytype}"
+        export NORM_METHOD="{params.norm_method}"
+        export SPECIFIC_GENES="{params.specific_genes}"
+        export HALLMARK_GMT="{params.hallmark_gmt}"
+        conda run -n rnaseq_env Rscript /pipeline/run_pipeline.R > {log} 2>&1
+        """

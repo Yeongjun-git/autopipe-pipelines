@@ -1,0 +1,200 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.1/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": {
+        "@id": "./"
+      },
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": [
+        "Dataset",
+        "SoftwareSourceCode",
+        "ComputationalWorkflow"
+      ],
+      "creator": [
+        {
+          "@id": "#author"
+        }
+      ],
+      "dateCreated": "2026-04-01",
+      "description": "A Snakemake pipeline that performs differential expression analysis on Salmon-quantified Bulk RNA-seq data using edgeR (TMM/quasi-likelihood), followed by downstream functional enrichment analyses including GO over-representation, GSEA, Reactome pathway analysis, and Hallmark gene-set scoring. Outputs include DEG Excel tables, volcano plots, and enrichment plots.",
+      "input": [
+        {
+          "@id": "#input-tx2gene"
+        },
+        {
+          "@id": "#input-metadata"
+        },
+        {
+          "@id": "#input-salmon-quant"
+        },
+        {
+          "@id": "#input-gmt"
+        }
+      ],
+      "isBasedOn": {
+        "@id": ""
+      },
+      "keywords": [
+        "bulk-rnaseq",
+        "differential-expression",
+        "edgeR",
+        "enrichment-analysis",
+        "GSEA",
+        "GO",
+        "Reactome",
+        "volcano-plot",
+        "salmon",
+        "tximport",
+        "bioconductor"
+      ],
+      "license": {
+        "@id": "https://spdx.org/licenses/MIT"
+      },
+      "name": "Bulk RNA-seq Differential Expression & Enrichment Analysis",
+      "output": [
+        {
+          "@id": "#output-deg-xlsx"
+        },
+        {
+          "@id": "#output-tpm-csv"
+        },
+        {
+          "@id": "#output-tmm-csv"
+        },
+        {
+          "@id": "#output-plots"
+        }
+      ],
+      "programmingLanguage": {
+        "@id": "#snakemake"
+      },
+      "sdPublisher": {
+        "@id": "https://hub.autopipe.org"
+      },
+      "softwareRequirements": [
+        {
+          "@id": "#tximport"
+        },
+        {
+          "@id": "#edger"
+        },
+        {
+          "@id": "#clusterprofiler"
+        },
+        {
+          "@id": "#fgsea"
+        },
+        {
+          "@id": "#reactomepa"
+        },
+        {
+          "@id": "#enrichplot"
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "@id": "#author",
+      "@type": "Person",
+      "name": "Yeongjun Kim"
+    },
+    {
+      "@id": "#snakemake",
+      "@type": "ComputerLanguage",
+      "name": "Snakemake",
+      "url": "https://snakemake.readthedocs.io"
+    },
+    {
+      "@id": "#tximport",
+      "@type": "SoftwareApplication",
+      "name": "tximport"
+    },
+    {
+      "@id": "#edger",
+      "@type": "SoftwareApplication",
+      "name": "edgeR"
+    },
+    {
+      "@id": "#clusterprofiler",
+      "@type": "SoftwareApplication",
+      "name": "clusterProfiler"
+    },
+    {
+      "@id": "#fgsea",
+      "@type": "SoftwareApplication",
+      "name": "fgsea"
+    },
+    {
+      "@id": "#reactomepa",
+      "@type": "SoftwareApplication",
+      "name": "ReactomePA"
+    },
+    {
+      "@id": "#enrichplot",
+      "@type": "SoftwareApplication",
+      "name": "enrichplot"
+    },
+    {
+      "@id": "#input-tx2gene",
+      "@type": "FormalParameter",
+      "description": "Transcript-to-gene mapping table (3 columns: tx_id, gene_id, gene_name)",
+      "encodingFormat": "text/tab-separated-values",
+      "name": "tx2gene.tsv"
+    },
+    {
+      "@id": "#input-metadata",
+      "@type": "FormalParameter",
+      "description": "Sample metadata CSV with columns: sample, file, and group column",
+      "encodingFormat": "text/csv",
+      "name": "metadata.csv"
+    },
+    {
+      "@id": "#input-salmon-quant",
+      "@type": "FormalParameter",
+      "description": "Per-sample Salmon quantification output (quant.sf)",
+      "encodingFormat": "text/tab-separated-values",
+      "name": "Salmon quant.sf files"
+    },
+    {
+      "@id": "#input-gmt",
+      "@type": "FormalParameter",
+      "description": "MSigDB Hallmark gene-set GMT file for mouse or human (optional)",
+      "encodingFormat": "text/plain",
+      "name": "Hallmark gene-set GMT (optional)"
+    },
+    {
+      "@id": "#output-deg-xlsx",
+      "@type": "FormalParameter",
+      "description": "Per-comparison DEG results with log2FC, padj, and column descriptions",
+      "encodingFormat": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "name": "DEG Excel tables"
+    },
+    {
+      "@id": "#output-tpm-csv",
+      "@type": "FormalParameter",
+      "encodingFormat": "text/csv",
+      "name": "TPM expression matrix"
+    },
+    {
+      "@id": "#output-tmm-csv",
+      "@type": "FormalParameter",
+      "encodingFormat": "text/csv",
+      "name": "TMM normalized count matrix"
+    },
+    {
+      "@id": "#output-plots",
+      "@type": "FormalParameter",
+      "description": "Volcano plots, GO bar/dot plots, GSEA enrichment plots, Reactome pathway plots",
+      "encodingFormat": "image/png",
+      "name": "Volcano & enrichment plots"
+    }
+  ]
+}
